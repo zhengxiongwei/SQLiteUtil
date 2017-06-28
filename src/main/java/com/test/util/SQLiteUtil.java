@@ -20,7 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class SQLiteUtil {
-	private static Log logger = LogFactory.getLog(SQLiteUtil.class);	
+	private static Log logger = LogFactory.getLog(SQLiteUtil.class);
 	private static Statement stmt;
 	private static Connection connect;
 
@@ -28,15 +28,16 @@ public class SQLiteUtil {
 		try {
 			// 获取SQLite数据库文件地址
 			File targetResource = new File("test.db");
-			if(!targetResource.exists()){
+			if (!targetResource.exists()) {
 				FileOutputStream fous = new FileOutputStream(targetResource);
 				fous.close();
-				logger.debug("sqlite的DB路径为："+ targetResource.getPath());
+				logger.debug("sqlite的DB路径为：" + targetResource.getPath());
 			}
 			// 获取SQLite数据库链接
 			Class.forName("org.sqlite.JDBC");
-			logger.debug("sqlite的DB路径为："+ targetResource.getPath());
-			connect = DriverManager.getConnection("jdbc:sqlite:"+ targetResource.getPath());
+			logger.debug("sqlite的DB路径为：" + targetResource.getPath());
+			connect = DriverManager.getConnection("jdbc:sqlite:"
+					+ targetResource.getPath());
 		} catch (Exception e) {
 			logger.error("SQLite数据库文件未找到！", e);
 		}
@@ -64,7 +65,7 @@ public class SQLiteUtil {
 			stmt = connect.createStatement();
 			connect.commit();
 			ResultSet result = stmt.executeQuery(sql);
-			while (result.next()) {	
+			while (result.next()) {
 				if (StringUtils.isNotBlank(result.getString("name"))) {
 					isexist = true;
 				}
@@ -160,8 +161,8 @@ public class SQLiteUtil {
 		return object;
 	}
 
-	public static void deleteObject(String tableName,String id) {
-		String delSql = "DELETE FROM "+tableName+" WHERE id='" + id + "'";
+	public static void deleteObject(String tableName, String id) {
+		String delSql = "DELETE FROM " + tableName + " WHERE id='" + id + "'";
 		try {
 			connect.setAutoCommit(false);
 			stmt = connect.createStatement();
@@ -173,17 +174,20 @@ public class SQLiteUtil {
 			logger.error(e.getMessage());
 		}
 	}
-	
-	public static void saveObject(String tableName,String id, Object object) {
-		
+
+	public static void saveObject(String tableName, String id, Object object) {
+
 		try {
-			if(! SQLiteUtil.tableIsExist(tableName)){
-				String sqlString="CREATE TABLE "+tableName+"(id VARCHAR ,data BLOB)";
-				SQLiteUtil.createTable(sqlString,tableName);
+			if (!SQLiteUtil.tableIsExist(tableName)) {
+				String sqlString = "CREATE TABLE " + tableName
+						+ "(id VARCHAR ,data BLOB)";
+				SQLiteUtil.createTable(sqlString, tableName);
 			}
-			String insertSql = "INSERT INTO "+tableName+" (id, data) VALUES (?,?)";
+			String insertSql = "INSERT INTO " + tableName
+					+ " (id, data) VALUES (?,?)";
 			ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+					arrayOutputStream);
 			objectOutputStream.writeObject(object);
 			objectOutputStream.flush();
 			byte data[] = arrayOutputStream.toByteArray();
@@ -205,17 +209,18 @@ public class SQLiteUtil {
 	public static List<Object> getObjectList(String tableName) {
 		List<Object> list = null;
 		try {
-			if(tableIsExist(tableName)){
-				String sql = "SELECT data FROM "+tableName;
+			if (tableIsExist(tableName)) {
+				String sql = "SELECT data FROM " + tableName;
 				connect.setAutoCommit(false);
 				stmt = connect.createStatement();
 				connect.commit();
 				ResultSet result = stmt.executeQuery(sql);
 				list = new ArrayList<Object>();
-				while (result.next()) {				
+				while (result.next()) {
 					byte[] object = result.getBytes(1);
-					ByteArrayInputStream bytesIns = new ByteArrayInputStream(object);
-					ObjectInputStream obIns= new ObjectInputStream(bytesIns);
+					ByteArrayInputStream bytesIns = new ByteArrayInputStream(
+							object);
+					ObjectInputStream obIns = new ObjectInputStream(bytesIns);
 					Object readObject = obIns.readObject();
 					list.add(readObject);
 				}

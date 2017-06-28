@@ -1,5 +1,5 @@
 /** 
- *          说        明：
+ *          说        明：操作SQLite数据库的Util
  *
  * @author  作  者  名：郑雄伟
  *		    E-mail：zhengxiongwei@vrvmail.com.cn
