@@ -4,12 +4,12 @@
 	<artifactId>sqlite-util</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SQLiteUtil</name>
-	<groupId>com.test.sqlite</groupId>
+	<groupId>com.zxw.sqlite</groupId>
 	<developers>
 		<developer>
 			<id>zxw</id>
 			<name>zhengxiongwei</name>
-			<email> zhengxiongwei89@163.com </email>
+			<email>zhengxiongwei89@163.com</email>
 		</developer>
 	</developers>
 	<dependencies>
